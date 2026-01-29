@@ -1,129 +1,217 @@
+
 # Rekama Systems
 
-![Rekama Badge](https://img.shields.io/badge/Status-Beta-blue?style=for-the-badge)
+![Rekama Badge](https://img.shields.io/badge/Status-Production%20Ready-green?style=for-the-badge)
 ![Gemini Badge](https://img.shields.io/badge/Powered%20By-Google%20Gemini-purple?style=for-the-badge)
-![Compliance Badge](https://img.shields.io/badge/Compliance-ISO%2015489%20%7C%20ISO%2027001-green?style=for-the-badge)
+![PostgreSQL Badge](https://img.shields.io/badge/Database-PostgreSQL-blue?logo=postgresql&style=for-the-badge)
+![Compliance Badge](https://img.shields.io/badge/Compliance-ISO%2015489%20%7C%20ISO%2027001-blue?style=for-the-badge)
 
-**Rekama Systems** is a next-generation Information Governance platform powered by Artificial Intelligence. It serves as a "Digital Sentinel" for enterprise data, offering In-Place Management, Risk Analysis, and Regulatory Compliance without moving your data to proprietary storage.
-
-The platform is architected to align with **ISO 15489** (Records Management), **ISO 16175** (Digital Records Integrity), and **ISO/IEC 27002:2022** (Information Security Controls).
-
----
-
-## 🚀 Features
-
-### 1. Data Sentinel Dashboard
-*   Real-time visualization of data risk across the enterprise.
-*   Classification distribution (Public vs. Restricted).
-*   Source connectivity status.
-
-### 2. Intelligent Discovery & Connectors
-*   **In-Place Management**: Connect to SharePoint, OneDrive, S3, and Slack without migrating data.
-*   **Crawl & Index**: Simulates indexing of remote content for metadata governance.
-*   **Lifecycle Control**: Pause/Resume syncing and manage connector configurations.
-
-### 3. Knowledge Base (RAG)
-*   **Vector Search**: Uses `text-embedding-004` to semantically search uploaded documents.
-*   **Dual-Mode Chat**:
-    *   **Fast Mode**: Uses `gemini-2.5-flash` for high-speed retrieval.
-    *   **Thinking Mode**: Uses `gemini-3-pro-preview` with extended thinking budgets for complex reasoning chains.
-*   **Knowledge Graph**: Interactive visualization of policy and record relationships.
-
-### 4. Risk Analyzer (ISO 27002 Aligned)
-*   **Ad-Hoc Scanning**: Paste text or drag files to detect PII and compliance violations.
-*   **Control Mapping**: Automatically maps detected risks to specific **ISO/IEC 27002:2022** controls (e.g., *5.12 Classification of information*).
-*   **Automated Scoring**: AI assigns a risk score (0-100) and classification.
-
-### 5. Records Registry (ISO 15489 & 16175)
-*   **Digital Integrity**: Every record includes a **SHA-256 Checksum** and version history to ensure immutability (ISO 16175).
-*   **Secure Disposition**: Deletion is handled via a formal process that generates a **Certificate of Destruction** in the audit log (ISO 15489).
-*   **Retention Schedules**: Map "Sentences" (Authorities) to records to calculate disposal dates automatically.
-*   **Legal Hold**: Immutable locking of records for eDiscovery purposes.
-
-### 6. Policies & Rules
-*   **AI Policy Drafter**: Describe a policy in plain English, and Gemini generates the JSON structure.
-*   **Policy Comparator**: Side-by-side AI analysis of two policies to find conflicts or gaps.
-
-### 7. Security & Audit (ISO 30301)
-*   **Compliance Dashboard**: Real-time view of system alignment with ISO standards.
-*   **RBAC**: Granular roles (Admin, Officer, Viewer).
-*   **Forensic Logs**: Immutable database of every system action.
-*   **Anomaly Detection**: AI agent analyzes logs to detect threats (e.g., "Mass Export detected at 3 AM").
+**Rekama Systems** is a next-generation Information Governance platform powered by Artificial Intelligence. It serves as a "Digital Sentinel" for enterprise data, offering In-Place Management, Risk Analysis, and Regulatory Compliance.
 
 ---
 
-## 🛠 Tech Stack
+## 🔐 Role-Based Access Control (RBAC)
 
-*   **Frontend**: React 18, TypeScript, Vite.
-*   **Styling**: Tailwind CSS (Enterprise Slate Theme).
-*   **AI/LLM**: Google GenAI SDK (Gemini 2.5 Flash, Gemini 3 Pro, Text-Embedding-004).
-*   **Database**: `sql.js` (SQLite WASM) + IndexedDB for robust client-side persistence.
-*   **Visualization**: Recharts, Custom SVG graphs.
-*   **Icons**: Lucide React.
+Rekama implements a rigorous RBAC model to ensure **Separation of Duties** and satisfy **ISO 27001 (Control A.5.15)** requirements. Access to governance actions is strictly gated by persona.
 
----
+### 👤 Governance Personas
 
-## 📦 Installation
-
-### Prerequisites
-*   Node.js v18+
-*   Google AI Studio API Key
-
-### Setup
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/cyberarian/rekama-sys.git
-    cd rekama-sys
-    ```
-
-2.  **Install dependencies**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure Environment**
-    Create a `.env` file in the root directory:
-    ```env
-    API_KEY=your_gemini_api_key_here
-    ```
-
-4.  **Run Development Server**
-    ```bash
-    npm run dev
-    ```
+| Persona | Primary Function | Business Context |
+| :--- | :--- | :--- |
+| **System Administrator** | Infrastructure & Connectivity | IT staff managing system health, integrations, and user identities. |
+| **Compliance Manager** | Authority & Lifecycle | Senior governance officers with "Master" authority, including destruction. |
+| **Records Officer** | Operational Management | Daily handlers responsible for indexing and metadata accuracy. |
+| **Legal Analyst** | Discovery & Litigation | Legal teams managing discovery requests and placing legal holds. |
+| **Internal Auditor** | Verification & Reporting | Read-only access to immutable audit trails for compliance verification. |
 
 ---
 
-## 📖 Usage Guide
+## 🛡️ Advanced Governance Features
 
-### First Time Login
-The system auto-seeds with a default **Admin** user.
-*   **User**: John Admin
-*   **Role**: Administrator
+### 📊 Data Sentinel (Governance Dashboard)
+The **Data Sentinel** serves as the primary command center, providing high-level observability into the organization's information assets.
+- **Real-Time KPI Tracking**: Monitors total record volume, identifies high-risk items requiring immediate review, and tracks global compliance scores.
+- **Risk Distribution Mapping**: Visualizes data classification spreads (Public vs. Restricted) using Recharts.
+- **Compliance Scoring Engine**: Calculates an aggregate governance health score based on ISO 15489 principles.
 
-### Adding Data Sources
-1.  Navigate to **Data Connectors**.
-2.  Click **Add Connector**.
-3.  Select a type (e.g., SharePoint) and name it.
-4.  The system will simulate the "Handshake" and "Initial Crawl" phases.
+### 🗄️ Records Registry (Lifecycle Management)
+The core engine for defensible records management and legal defensibility.
+- **ISO 16175 Integrity**: Every record is indexed with a SHA-256 checksum and versioning to ensure evidentiary weight.
+- **Legal Hold Orchestration**: Securely "locks" records involved in litigation, preventing accidental destruction.
+- **Defensible Destruction**: Workflow for authorized approval and generation of a permanent **Certificate of Destruction**.
 
-### Drafting a Policy
-1.  Go to **Policies & Rules** -> **AI Drafter**.
-2.  Type: *"Create a retention policy for HR employee contracts that lasts 7 years."*
-3.  Click **Generate**. The AI will structure the policy for you to save.
+### ⚖️ Policies & Rules (Governance Frameworks)
+The platform's regulatory brain, where organizational rules are codified and enforced.
+- **AI Policy Drafter**: Utilizes Gemini 3 Pro to generate enterprise-grade security and governance policies.
+- **Policy Comparator (Gap Analysis)**: AI-driven side-by-side comparison of policies to identify conflicts and regulatory non-conformities.
+- **Retention Schedules**: Mapping of business functions to legal retention periods.
 
-### Secure Disposition (Destruction)
-1.  Navigate to **Records Registry**.
-2.  Identify a record ready for disposal.
-3.  Click the **Trash** icon.
-4.  Confirm the secure destruction.
-5.  Check **Security & Audit** logs to view the generated **Certificate of Destruction**.
+### 🔗 Data Connectors (In-Place Discovery)
+Rekama avoids the "Data Swamp" problem by governing data where it resides.
+- **Zero-Copy Indexing**: Connectors for SharePoint, OneDrive, AWS S3, and Slack map metadata without moving payloads.
+- **Local Node Mapping**: Crawls local directories and registers them as managed governance nodes using the File System Access API.
+
+### 🧠 Knowledge Base (Semantic RAG)
+A Retrieval-Augmented Generation (RAG) system that transforms the record registry into an interactive intelligence hub.
+- **Semantic Discovery**: Uses `text-embedding-004` to perform high-dimensional vector searches.
+- **Dual-Mode Intelligence**: Fast Mode (Flash) for rapid queries and Thinking Mode (Pro) for complex reasoning.
+
+### 🛡️ Risk Analyzer (Deep Content Inspection)
+An ad-hoc forensic tool for inspecting unstructured text and documents.
+- **PII Detection**: Automatically flags Names, Emails, SSNs, and other sensitive entities.
+- **ISO 27002 Mapping**: Findings are mapped directly to international security controls.
+
+### 🔒 Security & Audit (Immutable Forensic Trail)
+The platform's core accountability layer, designed for legal defensibility and forensic transparency.
+- **Immutable Audit Trail**: Every user interaction, data mutation, and security event is recorded in a write-once PostgreSQL log.
+- **AI Anomaly Detection (Sentinel)**: Gemini-powered scanning of the audit trail to detect "low and slow" data exfiltration, mass exports, and unauthorized privilege escalations.
+- **Metadata Inspection**: Deep-dive access to the JSON metadata payload of every system event for forensic investigation.
+- **Threat Velocity Monitoring**: Real-time visualization of security incidents by severity (Critical, High, Medium, Low).
+
+### ⚙️ Settings (Infrastructure & Team Management)
+The configuration hub for aligning the platform with organizational and regulatory requirements.
+- **User & Team Management**: Granular RBAC control allowing System Administrators to manage identities, roles, and security clearances.
+- **Automated SoA Reporting**: AI synthesis of system telemetry to generate a professional **Statement of Applicability** for ISO 27001 / ISO 15489 audits.
+- **Verifiable Archive Export**: Generation of a cryptographically signed (SHA-256) JSON bundle of all platform data for long-term off-system archival.
+- **Notification Control**: Configuration of system-wide alerts for disposal due dates, risk detections, and synchronization errors.
+- **Infrastructure Connectivity**: Direct management of the PostgreSQL (Supabase) and Gemini AI sentinel handshakes.
 
 ---
 
-## 🛡️ Security Note
-This application uses a **Client-Side Database** (SQLite via WASM). In a real production environment, the `dbService` would be replaced by a REST/GraphQL API connecting to a secure backend (PostgreSQL/SQL Server). The API Key should never be exposed in client-side code in production; use a proxy server.
+## 🛠 Database Setup (PostgreSQL via Supabase)
+
+Rekama Systems has been migrated from local SQLite to a high-performance **PostgreSQL** backend. Follow these steps to initialize your governance environment:
+
+### 1. Create your Supabase Project
+1.  Go to [supabase.com](https://supabase.com) and create a new project.
+2.  Note your **Project URL** and **Anon Key** from the `Settings > API` section.
+
+### 2. Environment Configuration
+Add the following variables to your `.env` file or deployment environment:
+```properties
+API_KEY=your_gemini_api_key
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your_anon_public_key
+```
+
+### 3. Initialize Database Schema
+Run the following SQL in your Supabase SQL Editor to create the necessary tables and seed the initial administrator:
+
+```sql
+-- Create Tables
+CREATE TABLE IF NOT EXISTS records (
+    id TEXT PRIMARY KEY,
+    title TEXT,
+    type TEXT,
+    classification TEXT,
+    status TEXT,
+    "riskScore" INTEGER,
+    source TEXT,
+    "uploadedAt" TIMESTAMPTZ,
+    "legalHold" BOOLEAN DEFAULT FALSE,
+    "retentionScheduleId" TEXT,
+    "disposalDate" TIMESTAMPTZ,
+    checksum TEXT,
+    version INTEGER,
+    custodian TEXT,
+    format TEXT
+);
+
+CREATE TABLE IF NOT EXISTS policies (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    description TEXT,
+    content TEXT,
+    "createdAt" TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS schedules (
+    id TEXT PRIMARY KEY,
+    code TEXT,
+    name TEXT,
+    description TEXT,
+    "retentionYears" INTEGER,
+    trigger TEXT
+);
+
+CREATE TABLE IF NOT EXISTS connectors (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    type TEXT,
+    status TEXT,
+    "itemsIndexed" INTEGER,
+    "lastSync" TIMESTAMPTZ,
+    "targetUrl" TEXT
+);
+
+CREATE TABLE IF NOT EXISTS logs (
+    id TEXT PRIMARY KEY,
+    timestamp TIMESTAMPTZ,
+    "user" TEXT,
+    action TEXT,
+    resource TEXT,
+    severity TEXT,
+    metadata TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    email TEXT,
+    role TEXT,
+    avatar TEXT,
+    "lastLogin" TIMESTAMPTZ,
+    password TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kv_store (
+    key TEXT PRIMARY KEY,
+    value TEXT
+);
+
+-- Seed Initial Admin User
+INSERT INTO users (id, name, email, role, avatar, password)
+VALUES ('usr_sysadmin', 'IT Administrator', 'admin@rekama.sys', 'System Administrator', 'IT', 'admin')
+ON CONFLICT (id) DO NOTHING;
+
+-- Seed Initial Schedules
+INSERT INTO schedules (id, code, name, description, "retentionYears", trigger)
+VALUES 
+    ('sch_1', 'FIN-001', 'Financial Records', 'Invoices, Tax, Ledger', 7, 'Creation'),
+    ('sch_2', 'HR-005', 'Employee Contracts', 'Full time employment contracts', 7, 'Event'),
+    ('sch_3', 'EXE-999', 'Executive Correspondence', 'Board minutes and decisions', 25, 'Creation')
+ON CONFLICT (id) DO NOTHING;
+```
+
+---
+
+## 🔄 Operational Workflow
+
+Rekama Systems follows a strict **"In-Place Governance"** philosophy. Unlike traditional systems that require data migration, Rekama indexes and governs data where it currently resides.
+
+1.  **Identity & Secure Access (ISO 27001)**: Persona-Based Entry with RBAC and session protection.
+2.  **Data Connection**: Zero-copy indexing of SharePoint, S3, and OneDrive via Connectors.
+3.  **Intelligence**: Gemini-powered risk analysis, PII detection, and ISO 27002 mapping.
+4.  **Lifecycle**: Sentencing via Retention Schedules and Legal Hold management in the Records Registry.
+5.  **Audit**: Every action is recorded in the Immutable Audit Trail in PostgreSQL.
+
+---
+
+## 🚀 Key Features
+
+*   **Data Sentinel Dashboard**: Real-time analytics with Recharts.
+*   **Knowledge Base (RAG)**: Semantic discovery using Gemini 3 models.
+*   **Security Audit**: Forensic logging and AI anomaly detection.
+*   **AI Policy Drafter**: Automated generation of enterprise security policies.
+
+---
+
+## 🛠 Technology Stack
+
+*   **Frontend**: React 18, TypeScript, Tailwind CSS, Lucide Icons.
+*   **Database**: PostgreSQL (via Supabase).
+*   **AI**: Google Gemini API (@google/genai).
+*   **Analytics**: Recharts.
 
 ---
 

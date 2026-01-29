@@ -1,3 +1,4 @@
+
 export enum RecordStatus {
   Active = 'Active',
   Archived = 'Archived',
@@ -12,10 +13,13 @@ export enum Classification {
   Restricted = 'Restricted'
 }
 
+// Corporate Roles
 export enum UserRole {
-  Admin = 'Admin',
-  Officer = 'Officer',
-  Viewer = 'Viewer'
+  SysAdmin = 'System Administrator',       // IT/DevOps: System config, user mgmt
+  ComplianceManager = 'Compliance Manager', // Business Owner: Full record control, destruction
+  RecordsOfficer = 'Records Officer',       // Operational: Add/Edit records, no destruction
+  LegalAnalyst = 'Legal Analyst',           // Legal: Legal Holds, Discovery, View only
+  Auditor = 'Internal Auditor'              // Audit: Read-only logs and reporting
 }
 
 export interface UserProfile {
@@ -25,7 +29,43 @@ export interface UserProfile {
   role: UserRole;
   avatar?: string;
   lastLogin?: string;
+  password?: string; 
 }
+
+// --- PERMISSION SYSTEM ---
+
+export type Permission = 
+  | 'SYSTEM_MANAGE'      // Configure settings, manage users
+  | 'RECORD_CREATE'      // Upload/Register documents
+  | 'RECORD_EDIT'        // Edit metadata
+  | 'RECORD_DELETE'      // Secure destruction
+  | 'LEGAL_HOLD_MANAGE'  // Apply/Remove Legal Holds
+  | 'POLICY_MANAGE'      // Create/Edit Policies
+  | 'LOG_VIEW'           // View Security Audit Logs
+  | 'CONNECTOR_MANAGE';  // Add/Remove Data Sources
+
+const PERMISSION_MATRIX: Record<UserRole, Permission[]> = {
+  [UserRole.SysAdmin]: [
+    'SYSTEM_MANAGE', 'LOG_VIEW', 'CONNECTOR_MANAGE', 'RECORD_CREATE', 'RECORD_EDIT', 'POLICY_MANAGE'
+  ],
+  [UserRole.ComplianceManager]: [
+    'RECORD_CREATE', 'RECORD_EDIT', 'RECORD_DELETE', 'LEGAL_HOLD_MANAGE', 
+    'POLICY_MANAGE', 'LOG_VIEW', 'CONNECTOR_MANAGE'
+  ],
+  [UserRole.RecordsOfficer]: [
+    'RECORD_CREATE', 'RECORD_EDIT'
+  ],
+  [UserRole.LegalAnalyst]: [
+    'LEGAL_HOLD_MANAGE', 'LOG_VIEW'
+  ],
+  [UserRole.Auditor]: [
+    'LOG_VIEW'
+  ]
+};
+
+export const hasPermission = (role: UserRole, permission: Permission): boolean => {
+  return PERMISSION_MATRIX[role]?.includes(permission) || false;
+};
 
 export interface DocumentRecord {
   id: string;
@@ -39,11 +79,10 @@ export interface DocumentRecord {
   legalHold: boolean; 
   retentionScheduleId?: string; 
   disposalDate?: string;
-  // ISO 16175 Integrity Fields
-  checksum: string; // SHA-256 hash simulation
+  checksum: string; 
   version: number;
   custodian: string;
-  format: string; // MIME type
+  format: string; 
 }
 
 export interface Policy {
@@ -70,7 +109,9 @@ export interface Connector {
   status: 'Active' | 'Error' | 'Syncing' | 'Paused';
   itemsIndexed: number;
   lastSync: string;
-  targetUrl?: string; // New field for Source URL
+  targetUrl?: string; 
+  lastErrorMessage?: string; // Enterprise error reporting
+  syncProgress?: number;     // Sync visibility
 }
 
 export interface AuditLog {
@@ -80,7 +121,7 @@ export interface AuditLog {
   action: string;
   resource: string;
   severity: 'Low' | 'Medium' | 'High' | 'Critical';
-  metadata?: string; // For storing JSON details like Disposal Certificates
+  metadata?: string; 
 }
 
 export interface RiskAnalysisResult {
@@ -88,7 +129,7 @@ export interface RiskAnalysisResult {
   classification: Classification;
   pii_detected: string[];
   reasoning: string;
-  iso_controls: string[]; // ISO 27002 Control mappings
+  iso_controls: string[]; 
 }
 
 export interface ChatMessage {
